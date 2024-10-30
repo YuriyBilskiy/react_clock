@@ -18,47 +18,21 @@ export class App extends React.Component {
     hasClock: true,
   };
 
-  nameInterval: number | undefined;
-
-  clockInterval: number | undefined;
+  timerId = 0;
 
   componentDidMount(): void {
-    this.nameInterval = window.setInterval(() => {
+    this.timerId = window.setInterval(() => {
       this.setState({ clockName: getRandomName() });
     }, 3300);
-    this.clockInterval = window.setInterval(() => {
-      this.setState({ today: new Date() }, () => {
-        if (this.state.hasClock) {
-          // eslint-disable-next-line no-console
-          console.log(this.state.today.toUTCString().slice(-12, -4));
-        }
-      });
-    }, 1000);
   }
 
   componentWillUnmount(): void {
-    window.clearInterval(this.nameInterval);
-    window.clearInterval(this.clockInterval);
-  }
-
-  componentDidUpdate(
-    prevProps: Readonly<{}>,
-    prevState: Readonly<State>,
-  ): void {
-    if (prevState.clockName !== this.state.clockName) {
-      // eslint-disable-next-line no-console
-      console.warn(
-        `Renamed from ${prevState.clockName} to ${this.state.clockName}`,
-      );
-    }
-
-    if (!prevState.hasClock && this.state.hasClock) {
-      this.setState({ today: new Date() });
-    }
+    window.clearInterval(this.timerId);
+    window.clearInterval(this.timerId);
   }
 
   render() {
-    const { today, clockName, hasClock } = this.state;
+    const { clockName, hasClock } = this.state;
 
     document.addEventListener('contextmenu', (event: MouseEvent) => {
       event.preventDefault();
@@ -77,7 +51,7 @@ export class App extends React.Component {
       <div className="App">
         <h1>React clock</h1>
 
-        {hasClock && <Clock today={today} clockName={clockName} />}
+        {hasClock && <Clock hasClock={hasClock} clockName={clockName} />}
       </div>
     );
   }
